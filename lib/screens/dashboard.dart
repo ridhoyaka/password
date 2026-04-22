@@ -34,13 +34,11 @@ class Password {
 }
 
 class DashboardPage extends StatefulWidget {
-  const DashboardPage({Key? key}) : super(key: key);
-
   @override
-  DashboardPageState createState() => DashboardPageState();
+  _DashboardPageState createState() => _DashboardPageState();
 }
 
-class DashboardPageState extends State<DashboardPage> {
+class _DashboardPageState extends State<DashboardPage> {
   List<Password> passwords = [];
   final DBHelper dbHelper = DBHelper();
 
@@ -52,24 +50,18 @@ class DashboardPageState extends State<DashboardPage> {
 
   void _loadData() async {
     final data = await dbHelper.getAll();
-
-    if (!mounted) return; // penting biar aman
-
     setState(() {
       passwords = data.map((e) => Password.fromMap(e)).toList();
     });
   }
 
   void _addOrEditPassword({Password? existing}) {
-    TextEditingController titleController = TextEditingController(
-      text: existing?.title ?? '',
-    );
-    TextEditingController userController = TextEditingController(
-      text: existing?.username ?? '',
-    );
-    TextEditingController passController = TextEditingController(
-      text: existing?.password ?? '',
-    );
+    TextEditingController titleController =
+        TextEditingController(text: existing?.title ?? '');
+    TextEditingController userController =
+        TextEditingController(text: existing?.username ?? '');
+    TextEditingController passController =
+        TextEditingController(text: existing?.password ?? '');
 
     showDialog(
       context: context,
@@ -81,15 +73,15 @@ class DashboardPageState extends State<DashboardPage> {
             children: [
               TextField(
                 controller: titleController,
-                decoration: const InputDecoration(labelText: "Judul"),
+                decoration: InputDecoration(labelText: "Judul"),
               ),
               TextField(
                 controller: userController,
-                decoration: const InputDecoration(labelText: "Username"),
+                decoration: InputDecoration(labelText: "Username"),
               ),
               TextField(
                 controller: passController,
-                decoration: const InputDecoration(labelText: "Password"),
+                decoration: InputDecoration(labelText: "Password"),
                 obscureText: true,
               ),
             ],
@@ -97,11 +89,11 @@ class DashboardPageState extends State<DashboardPage> {
         ),
         actions: [
           TextButton(
-            child: const Text("Batal"),
+            child: Text("Batal"),
             onPressed: () => Navigator.pop(context),
           ),
           ElevatedButton(
-            child: const Text("Simpan"),
+            child: Text("Simpan"),
             onPressed: () async {
               if (existing == null) {
                 await dbHelper.insert({
@@ -141,27 +133,27 @@ class DashboardPageState extends State<DashboardPage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text("Username: ${pass.username}"),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             Text("Password: ${pass.password}"),
           ],
         ),
         actions: [
           TextButton(
-            child: const Text("Edit"),
+            child: Text("Edit"),
             onPressed: () {
               Navigator.pop(context);
               _addOrEditPassword(existing: pass);
             },
           ),
           TextButton(
-            child: const Text("Hapus"),
+            child: Text("Hapus"),
             onPressed: () {
               Navigator.pop(context);
               _deletePassword(pass.id!);
             },
           ),
           TextButton(
-            child: const Text("Tutup"),
+            child: Text("Tutup"),
             onPressed: () => Navigator.pop(context),
           ),
         ],
@@ -173,11 +165,11 @@ class DashboardPageState extends State<DashboardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Dashboard Password"),
+        title: Text("Dashboard Password"),
         backgroundColor: Colors.blue[900],
       ),
       body: passwords.isEmpty
-          ? const Center(child: Text("Belum ada data"))
+          ? Center(child: Text("Belum ada data"))
           : ListView.builder(
               itemCount: passwords.length,
               itemBuilder: (context, index) {
@@ -194,7 +186,7 @@ class DashboardPageState extends State<DashboardPage> {
             ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blue[900],
-        child: const Icon(Icons.add),
+        child: Icon(Icons.add),
         onPressed: () => _addOrEditPassword(),
       ),
     );
